@@ -31,7 +31,7 @@
     </style>
 </head>
 <body>
-    <h1>My canvas projetcs</h1>
+    <h1>My canvas projects</h1>
     <ul>
         <li>
             <a href="./PremierTest/index.html">Bouboules</a>
