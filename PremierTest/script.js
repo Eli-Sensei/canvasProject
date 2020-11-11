@@ -87,10 +87,23 @@ window.addEventListener("mousemove", (event) => {
     mouse.y = event.y;
     //console.log(mouse)
 });
+window.addEventListener("resize", () => {
+    canvas.width = window.innerWidth - 10;
+    canvas.height = window.innerHeight - 10;
+    init();
+});
 
+//color of our circles
+let colorArray = [
+    "#120326",
+    "#1F0840",
+    "#2E0F59",
+    "#07030D",
+    "#F2F2F2"
 
+];
 
-function Circle(x, y, dx, dy, radius, strokeColor, fillColor, maxRadius, minRadius) {
+function Circle(x, y, dx, dy, radius, maxRadius, minRadius) {
     this.x = x;
     this.y = y;
     this.dx = dx;
@@ -99,14 +112,16 @@ function Circle(x, y, dx, dy, radius, strokeColor, fillColor, maxRadius, minRadi
     this.maxRadius = maxRadius;
     this.minRadius = minRadius;
 
-    let originalRadius = this.radius;
+    this.fillColor = colorArray[Math.floor(Math.random() * colorArray.length)];
+
+    //let originalRadius = this.radius;
 
     this.draw = function () {
         c.beginPath();
         c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-        c.strokeStyle = strokeColor;
+        //c.strokeStyle = strokeColor;
         c.stroke();
-        //c.fillStyle = fillColor;
+        c.fillStyle = this.fillColor;
         c.fill();
     }
 
@@ -139,24 +154,26 @@ function Circle(x, y, dx, dy, radius, strokeColor, fillColor, maxRadius, minRadi
 
 let circleArray = [];
 
-for (let i = 0; i < 100; i++) {
+function init() {
+    circleArray = [];
+    for (let i = 0; i < 700; i++) {
 
-    let radius = Math.floor(Math.random() * (35 - 20) + 20);
-    let maxRadius = Math.floor(Math.random() * (60 - 40) + 40);
-    let minRadius = Math.floor(Math.random() * (10 - 4) + 4);
-    let x = Math.random() * (innerWidth - radius * 2) + radius;
-    let y = Math.random() * (innerHeight - radius * 2) + radius;
-    let dx = (Math.random() - 0.5) * 3;
-    let dy = (Math.random() - 0.5) * 3;
-    let strokeColor = RandomColor();
-    let fillColor = RandomColor();
-    let circle = new Circle(x, y, dx, dy, radius, strokeColor, fillColor, maxRadius, minRadius);
-    //console.log(circle);
-
-    circleArray.push(circle);
-
+        let radius = Math.floor(Math.random() * (35 - 20) + 20);
+        let maxRadius = Math.floor(Math.random() * (60 - 40) + 40);
+        let minRadius = Math.floor(Math.random() * (10 - 4) + 4);
+        let x = Math.random() * (innerWidth - radius * 2) + radius;
+        let y = Math.random() * (innerHeight - radius * 2) + radius;
+        let dx = (Math.random() - 0.5) * 3;
+        let dy = (Math.random() - 0.5) * 3;
+        let circle = new Circle(x, y, dx, dy, radius, maxRadius, minRadius);
+        //console.log(circle);
     
+        circleArray.push(circle);
+    
+        
+    }    
 }
+init();
 
 //console.log(circleArray);
 
