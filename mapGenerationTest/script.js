@@ -1,5 +1,4 @@
 let canvas = document.querySelector('canvas');
-console.log(canvas);
 
 canvas.width = 800;
 canvas.height = 600;
@@ -8,96 +7,94 @@ canvas.height = 600;
 
 let c = canvas.getContext('2d');
 
-// Coeur 
-function drawHeart(x, y) {
-    
-    c.beginPath();
-    c.moveTo(40 + x, 50 + y);
-    c.lineTo(20 + x, 30 + y);
-    c.moveTo(40 + x, 50 + y);
-    c.lineTo(60 + x, 30 + y);
-    c.lineTo(20 + x, 30 + y);
-    c.strokeStyle = '#4d0000';
-    c.stroke();
-    c.fillStyle = "#4d0000";
-    c.fill();
-    
-    c.beginPath();
-    c.arc(30 + x, 30 + y, 10, Math.PI, false);
-    c.arc(50 + x, 30 + y, 10, Math.PI, false);
-    c.lineTo(30 + x, 30 + y);
-    c.strokeStyle = "#4d0000";
-    c.stroke();
-    c.fillStyle = "#4d0000";
-    c.fill();
-}
 
-class Heart {
-    constructor(x, y, velX, velY, sizeX, sizeY){
+function mapInit() {
+    let x = 0;
+    let y = 600 - 100;
+    while (true) {
+        c.fillStyle = "black";
+        c.fillRect(x, y, 20, 20);
+        x += 20;
+
+        if (x > 800) {
+            x = 0;
+            y += 20;
+            if (y > 600) {
+                y = 0;
+                x = 0;
+                break;
+            }
+        }
+    }
+}
+mapInit();
+
+
+class Player {
+    constructor(x, y, velX, velY, w, h){
         this.x = x;
         this.y = y;
         this.velX = velX;
         this.velY = velY;
-        this.sizeX = sizeX;
-        this.sizeY = sizeY;
+        this.w = w;
+        this.h = h;
 
-        this.drawHeart = () => {
-            c.beginPath();
-            c.moveTo(this.x, this.y);
-            c.lineTo(this.sizeX, this.sizeY);
-            c.moveTo(this.sizeX, this.sizeY);
-            c.lineTo(this.sizeX, this.sizeY);
-            c.lineTo(this.sizeX, this.sizeY);
-            c.strokeStyle = '#4d0000';
-            c.stroke();
-            c.fillStyle = "#4d0000";
-            c.fill();
-            
-            c.beginPath();
-            c.arc(this.sizeX, this.sizeY, this.sizeX / 2, Math.PI, false);
-            c.arc(this.sizeX, this.sizeY, this.sizeX / 2, Math.PI, false);
-            c.lineTo(this.x, this.y);
-            c.strokeStyle = "#4d0000";
-            c.stroke();
-            c.fillStyle = "#4d0000";
-            c.fill();
+        let gravityForce = 1;
+
+        function gravity() {
+            if (gravityForce < 5) {
+                gravityForce += gravityForce / 2;
+            }
         }
 
-        this.drawHeart();
+
+        this.draw = () => {
+            c.clearRect(this.x, this.y - this.velY, this.w, this.h);
+
+            c.fillStyle = "seashell"
+            c.fillRect(this.x, this.y, this.w, this.h);
+        }
+
+        this.update = () =>{
+
+            // console.log("pouet");
+
+            
+            if(this.y + this.h < canvas.height - 100 ){
+                gravity();
+                this.y += gravityForce;
+                console.log(gravityForce)
+                
+            }
+            addEventListener("keydown", (key)=>{
+                
+                
+
+                if(key.code === "Space"){
+                    c.clearRect(this.x, this.y, this.w, this.h);
+                    this.y = 200;
+                }
+            });
+            
+            
+            
+
+            this.draw();
+            
+            requestAnimationFrame(this.update);
+        }
+        this.update();
     }
 }
 
+let player = new Player(200, 200, 3, 3, 20, 20)
 
 
-let x = 0;
-let y = 0;
-let velocityX = 10;
-let velocityY = 10;
 
-let heart = new Heart(x, y, velocityX, velocityY, 20, 50);
-heart.drawHeart();
+function updateFrame(){
 
-/*
-function Animate() {
-    requestAnimationFrame(Animate);
-    c.clearRect(0, 0, innerWidth, innerHeight);
-
-    
-    drawHeart(x, y);
-    if (x + 60 > canvas.width || x + 10 < 0) {
-        velocityX = -velocityX;
-    }
-    if (y + 60> canvas.height || y + 10 < 0) {
-        velocityY = -velocityY;
-    }
-    x += velocityX;
-    y += velocityY;
+    mapInit();
+    requestAnimationFrame(updateFrame);
 }
-Animate();
+updateFrame();
 
-
-/*
-for (let between = 0; between < canvas.width; between += 50) {
-    c.fillRect(between)
-}
-*/

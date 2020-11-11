@@ -36,6 +36,9 @@
         <li>
             <a href="./PremierTest/index.html">Bouboules</a>
         </li>
+        <li>
+            <a href="./StarWarsGame/index.html">Star Wars Game</a>
+        </li>
     </ul>
 </body>
 </html>
