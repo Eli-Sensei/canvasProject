@@ -40,7 +40,7 @@
             <a href="./StarWarsGame/index.html">Star Wars Game</a>
         </li>
         <li>
-            <a href="./Pong/index.html">Pong</a>
+            <a href="./PongTest/index.html">Pong</a>
         </li>
     </ul>
 </body>
