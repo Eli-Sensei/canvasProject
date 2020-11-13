@@ -8,11 +8,17 @@ let c = canvas.getContext('2d');
 window.addEventListener("resize", ()=>{
     canvas.width = window.innerWidth - 10;
     canvas.height = window.innerHeight - 10;
+    
 });
 
 const score = {
     player: 0,
-    IA: 0
+    bot: 0,
+    addScore: (who)=>{
+        if(who === "player") score.player += 1;
+        if(who === "bot") score.bot += 1;
+        
+    }
 };
 
 const ball = {
@@ -39,14 +45,84 @@ const rightBar = {
     y: 250,
     width: 10,
     height: 100,
+    speed: 2,
     color: "white"
 };
+
+let borderMap = {
+    size: 5
+};
+borderMap = {
+    wallLeft: {
+        x: 0,
+        y: 50,
+        width: borderMap.size,
+        height: canvas.height - 50,
+        color: "white"
+    },
+    wallRight: {
+        x: canvas.width - borderMap.size,
+        y: 50,
+        width: borderMap.size,
+        height: canvas.height - 50,
+        color: "white"
+    },
+    wallTop: {
+        x: 0,
+        y: 50,
+        width: canvas.width,
+        height: borderMap.size,
+        color: "white"
+    },
+    wallBottom: {
+        width: canvas.width,
+        height: borderMap.size,
+        x: 0,
+        y: canvas.height - borderMap.size,
+        color: "white"
+    }
+};
+
+
 
 const mouse = {
     x: undefined,
     y: undefined
 };
 
+const game = {
+    stopBall: ()=>{
+        ball.velX = 0;
+        ball.velY = 0;
+    },
+    replaceBallAndBarAtCenter: ()=>{
+        ball.x = canvas.width / 2;
+        ball.y = canvas.height / 2;
+        rightBar.y = ball.y - (rightBar.height / 2) + (ball.height / 2);
+    },
+    startBall: ()=>{
+        ball.velX = 3;
+        ball.velY = 3;
+    },
+    gameInit: ()=>{
+        game.stopBall();
+        game.replaceBallAndBarAtCenter();
+        setTimeout(game.startBall, 3000);
+    },
+    gameScoreUpdate: ()=>{
+        c.font = "30px Verdana";
+        c.fillText(`${score.player}`, canvas.width / 2 - 25, 32);
+        c.fillText(`${score.bot}`, canvas.width / 2 + 25, 32);
+        c.font = "40px Verdana";
+        c.fillText(`-`, canvas.width / 2 , 35);
+    },
+    resetGame: ()=>{
+        score.player = 0;
+        score.bot = 0;
+        game.gameInit();
+    }
+
+}
 window.addEventListener("mousemove", (e)=>{
     mouse.x = e.x;
     mouse.y = e.y;
@@ -138,78 +214,97 @@ function isCircleIntoSquare(cx, cy, radius, rx, ry, rw, rh) {
     return false;
 }
 
+function Winner(param) {
+    
+}
 
 function drawPrefab(prefab) {
     c.fillStyle = prefab.color;
     c.fillRect(prefab.x, prefab.y, prefab.width, prefab.height);
 }
 
-function allPrefabsMove() {
+
+function ballMovement() {
     // Ball movement
-    if(isSquareIntoSquare(ball, rightBar) || isSquareIntoSquare(ball, leftBar) ||ball.x < 0){
+    if(isSquareIntoSquare(ball, borderMap.wallRight)){
+        setTimeout(score.addScore("player"), 200);
+    }
+    if(isSquareIntoSquare(ball, borderMap.wallLeft)){
+        setTimeout(score.addScore("bot"), 200);
+    }
+    if(isSquareIntoSquare(ball, rightBar) || isSquareIntoSquare(ball, leftBar)){
         ball.velX = -ball.velX;
     }
-    if(ball.y + ball.height > canvas.height || ball.y < 0){
+    if(isSquareIntoSquare(ball, borderMap.wallTop) || isSquareIntoSquare(ball, borderMap.wallBottom)){
         ball.velY = -ball.velY;
     }
     ball.x += ball.velX;
     ball.y += ball.velY;
-    drawPrefab(ball);
     
+    if(ball.x + ball.width > canvas.width || ball.x < 0){
+        game.stopBall();
+        game.replaceBallAndBarAtCenter();
+        setTimeout(game.startBall, 3000);
+        
+    }
+    drawPrefab(ball);
+}
 
+function allPrefabsMovement() {
+    
+    ballMovement();
+    
     //right bar movement
-    rightBar.y = ball.y - (rightBar.height / 2) + (ball.height / 2);
+    // rightBar.y = ball.y - (rightBar.height / 2) + (ball.height / 2);
+    if(rightBar.y + rightBar.height / 2 > ball.y + ball.height / 2){
+        rightBar.y += -rightBar.speed;
+    }else if(rightBar.y + rightBar.height / 2 < ball.y + ball.height / 2){
+        rightBar.y += rightBar.speed;
+    }
     if (rightBar.y <= 10) {
         rightBar.y = 10; 
     }else if(rightBar.y + rightBar.height > canvas.height - 10){
         rightBar.y = canvas.height - 10 - rightBar.height;
     }
     drawPrefab(rightBar);
-
+    
     //left bar movement
     if(mouse.y > 10 && mouse.y < canvas.height - 10){
         leftBar.y = mouse.y - (leftBar.height / 2);
-        if (leftBar.y <= 10) {
-            leftBar.y = 10; 
-        }else if(leftBar.y + leftBar.height > canvas.height - 10){
-            leftBar.y = canvas.height - 10 - leftBar.height;
+        if (leftBar.y <= borderMap.wallTop.y + borderMap.wallTop.height + 10) {
+            leftBar.y = borderMap.wallTop.y + borderMap.wallTop.height + 10; 
+        }else if(leftBar.y + leftBar.height >= borderMap.wallBottom.y - 10){
+            leftBar.y = borderMap.wallBottom.y - 10 - leftBar.height;
         }
     }
     drawPrefab(leftBar);
-
-
-}
-
-let xVel = 3;
-function circle2Move() {
-    if(circle2.x + circle2.radius > canvas.width || circle2.x - circle2.radius < 0){
-        xVel = -xVel;
-    }
-    circle2.x += xVel;
-    if (isCircleIntoCircle(circle2.x, circle2.y, circle.x, circle.y, circle2.radius, circle.radius)) {
-        c.fillStyle = circle2.wrongColor;
-    }else{
-
-        c.fillStyle = circle2.goodColor;
-    }
-
-    c.beginPath();
-    c.arc(circle2.x, circle2.y, circle2.radius, 0, Math.PI * 2, false);
-    c.fill();
-    c.stroke();
+    
+    
 }
 
 
 
 
+
+
+game.gameInit();
 function update() {
     c.clearRect(0, 0, canvas.width, canvas.height);
-
+    drawPrefab(borderMap.wallLeft);
+    drawPrefab(borderMap.wallRight);
+    drawPrefab(borderMap.wallTop);
+    drawPrefab(borderMap.wallBottom);
     
-    allPrefabsMove();
+    allPrefabsMovement();
+    game.gameScoreUpdate();
+
+    //if(score.player >= 6 || score.bot >= 6) game.resetGame();
 
     requestAnimationFrame(update);
 }
 update();
+
+
+
 
 
