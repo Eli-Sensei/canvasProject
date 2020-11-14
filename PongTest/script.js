@@ -1,38 +1,49 @@
 let canvas = document.querySelector('canvas');
 
 canvas.width = window.innerWidth - 10;
-canvas.height = window.innerHeight - 10;
+canvas.height = canvas.width / 3 * 2;
 
 let c = canvas.getContext('2d');
 
 window.addEventListener("resize", ()=>{
     canvas.width = window.innerWidth - 10;
-    canvas.height = window.innerHeight - 10;
+    canvas.height = canvas.width / 3 * 2;
     
 });
 
-const score = {
+///////////// PREFABS /////////////////////////
+let score = {
     player: 0,
     bot: 0,
     addScore: (who)=>{
         if(who === "player") score.player += 1;
         if(who === "bot") score.bot += 1;
-        
+        console.log("added 1 to " + who);
     }
 };
 
-const ball = {
+let ballDirection = [-10, 10];
+let ball = {
     x: 200,
     y: 200,
     width: 10,
     height: 10,
     radius: 15,
-    velX: 3,
-    velY: 3,
+    velX: ballDirection[Math.floor(Math.random() * 2)],
+    velY: Math.random() * (180 + 180) - 180,
     color: "white"
 };
+ball.velY = Math.floor(ball.velY / 10);
+// console.log(ball.velY);
 
-const leftBar = {
+let ballCache = {
+    originalVelX: ball.velX,
+    originalVelY: ball.velY
+}
+
+// console.log(ball);
+
+let leftBar = {
     x: 20,
     y: 250,
     width: 10,
@@ -40,14 +51,17 @@ const leftBar = {
     color: "white"
 };
 
-const rightBar = {
+let rightBar = {
     x: innerWidth - 40,
     y: 250,
     width: 10,
     height: 100,
-    speed: 2,
+    speed: ball.velY,
     color: "white"
 };
+if (rightBar.speed < 0) {
+    rightBar.speed = -rightBar.speed;
+}
 
 let borderMap = {
     size: 5
@@ -58,14 +72,14 @@ borderMap = {
         y: 50,
         width: borderMap.size,
         height: canvas.height - 50,
-        color: "white"
+        color: "transparent"
     },
     wallRight: {
         x: canvas.width - borderMap.size,
         y: 50,
         width: borderMap.size,
         height: canvas.height - 50,
-        color: "white"
+        color: "transparent"
     },
     wallTop: {
         x: 0,
@@ -101,8 +115,8 @@ const game = {
         rightBar.y = ball.y - (rightBar.height / 2) + (ball.height / 2);
     },
     startBall: ()=>{
-        ball.velX = 3;
-        ball.velY = 3;
+        ball.velX = ballDirection[Math.floor(Math.random() * 2)];
+        ball.velY = ballCache.originalVelY;
     },
     gameInit: ()=>{
         game.stopBall();
@@ -111,12 +125,12 @@ const game = {
     },
     gameScoreUpdate: ()=>{
         c.font = "30px Verdana";
-        c.fillText(`${score.player}`, canvas.width / 2 - 25, 32);
-        c.fillText(`${score.bot}`, canvas.width / 2 + 25, 32);
+        c.fillText(`${score.player}`, canvas.width / 2 - 25, 35);
+        c.fillText(`${score.bot}`, canvas.width / 2 + 25, 35);
         c.font = "40px Verdana";
         c.fillText(`-`, canvas.width / 2 , 35);
     },
-    resetGame: ()=>{
+    resetGame: async ()=>{
         score.player = 0;
         score.bot = 0;
         game.gameInit();
@@ -128,6 +142,8 @@ window.addEventListener("mousemove", (e)=>{
     mouse.y = e.y;
 });
 
+
+/////////////////// FUNCTIONS ///////////////////
 
 // POINT / POINT
 function isColliding(x1, y1, x2, y2) {
@@ -214,8 +230,14 @@ function isCircleIntoSquare(cx, cy, radius, rx, ry, rw, rh) {
     return false;
 }
 
-function Winner(param) {
-    
+function displayWinner() {
+    if(score.player > score.bot){
+        c.font = "30px Verdana";
+        c.fillText(`Winner`, 25, 32);
+    }else {
+        c.font = "30px Verdana";
+        c.fillText(`Winner`, canvas.width - 120, 32);
+    }
 }
 
 function drawPrefab(prefab) {
@@ -225,13 +247,23 @@ function drawPrefab(prefab) {
 
 
 function ballMovement() {
+
+    function replaceBall() {
+        game.stopBall();
+        game.replaceBallAndBarAtCenter();
+        setTimeout(game.startBall, 3000);
+    }
+
     // Ball movement
     if(isSquareIntoSquare(ball, borderMap.wallRight)){
+        replaceBall();
         setTimeout(score.addScore("player"), 200);
+        
+    }else if(isSquareIntoSquare(ball, borderMap.wallLeft)){
+        replaceBall();
+        setTimeout(()=>{score.addScore("bot")}, 200);
     }
-    if(isSquareIntoSquare(ball, borderMap.wallLeft)){
-        setTimeout(score.addScore("bot"), 200);
-    }
+    
     if(isSquareIntoSquare(ball, rightBar) || isSquareIntoSquare(ball, leftBar)){
         ball.velX = -ball.velX;
     }
@@ -241,12 +273,8 @@ function ballMovement() {
     ball.x += ball.velX;
     ball.y += ball.velY;
     
-    if(ball.x + ball.width > canvas.width || ball.x < 0){
-        game.stopBall();
-        game.replaceBallAndBarAtCenter();
-        setTimeout(game.startBall, 3000);
-        
-    }
+    
+
     drawPrefab(ball);
 }
 
@@ -255,14 +283,16 @@ function allPrefabsMovement() {
     ballMovement();
     
     //right bar movement
-    // rightBar.y = ball.y - (rightBar.height / 2) + (ball.height / 2);
+    // Above or BElow the ball
     if(rightBar.y + rightBar.height / 2 > ball.y + ball.height / 2){
         rightBar.y += -rightBar.speed;
     }else if(rightBar.y + rightBar.height / 2 < ball.y + ball.height / 2){
         rightBar.y += rightBar.speed;
     }
-    if (rightBar.y <= 10) {
-        rightBar.y = 10; 
+
+    // Touch bottom or top wall 
+    if (rightBar.y <= borderMap.wallTop.y + borderMap.wallTop.height + 10) {
+        rightBar.y = borderMap.wallTop.y + borderMap.wallTop.height + 10; 
     }else if(rightBar.y + rightBar.height > canvas.height - 10){
         rightBar.y = canvas.height - 10 - rightBar.height;
     }
@@ -298,8 +328,10 @@ function update() {
     allPrefabsMovement();
     game.gameScoreUpdate();
 
-    //if(score.player >= 6 || score.bot >= 6) game.resetGame();
-
+    if(score.player >= 6 || score.bot >= 6) {
+        displayWinner();
+        setTimeout(game.resetGame, 2000);
+    }
     requestAnimationFrame(update);
 }
 update();

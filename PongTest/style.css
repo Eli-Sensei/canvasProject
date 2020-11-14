@@ -4,8 +4,17 @@ body{
 }
 
 canvas{
-    border: 1px solid black;
+    border: 5px solid white;
+    border-bottom: none;
     position: absolute;
     background-color: black;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    cursor: none;
 }
+
+
 

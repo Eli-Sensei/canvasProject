@@ -3,6 +3,7 @@ const c = canvas.getContext("2d");
 canvas.width = 800;
 canvas.height = 500;
 
+
 const keys = [];
 
 const player = {
