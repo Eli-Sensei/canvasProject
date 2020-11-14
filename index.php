@@ -12,6 +12,10 @@
             margin: 0;
             padding-left: 10px;
         }
+        h1{
+            margin: 0;
+            padding: 20px;
+        }
         a{
             color: inherit;
         }
