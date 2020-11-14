@@ -9,6 +9,8 @@
         body{
             background-color: rgb(19, 32, 44);
             color: seashell;
+            margin: 0;
+            padding-left: 10px;
         }
         a{
             color: inherit;
