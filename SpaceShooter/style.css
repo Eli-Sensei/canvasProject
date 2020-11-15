@@ -4,20 +4,15 @@ body{
 }
 
 canvas{
-    border: 5px solid white;
-    border-bottom: none;
-    position: absolute;
+    
     background-color: black;
+    width: 500px;
+    height: 800px;
+
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
 
-    cursor: none;
-}
-
-
-
-*{
-    transition: all 1s ease;
+    outline: none;
 }
