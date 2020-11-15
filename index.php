@@ -48,6 +48,9 @@
         <li>
             <a href="./PongTest/index.html">Pong</a>
         </li>
+        <li>
+            <a href="./SpaceShooter/index.html">Space Shooter</a>
+        </li>
     </ul>
 </body>
 </html>
