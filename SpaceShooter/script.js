@@ -19,6 +19,7 @@ let stat = {
 let player = {
     x: canvas.width / 2 - 10,
     y: canvas.height - 40,
+    velX: 0,
     width: 20,
     height: 20,
     color: "blue",
@@ -81,6 +82,21 @@ borderMap = {
 };
 
 
+window.addEventListener("keydown", (key)=>{
+    console.log(key.code);
+    player.canMove = true;
+    if (player.canMove) {
+        if (key.code === "ArrowRight") {
+            player.velX = 3;
+        }else if(key.code === "ArrowLeft"){
+            player.velX = -3;
+        }
+    }
+});
+window.addEventListener("keyup", ()=>{
+    player.canMove = false;
+    player.velX = 0;
+});
 
 
 ////////////////////////         FUNCTION        ///////////
@@ -117,6 +133,7 @@ function drawStat() {
 
 function playerScript() {
     
+    player.x += player.velX;
     drawPrefab(player);
 }
 
