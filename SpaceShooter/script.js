@@ -93,9 +93,23 @@ window.addEventListener("keydown", (key)=>{
         }
     }
 });
-window.addEventListener("keyup", ()=>{
+
+window.addEventListener("keyup", (key)=>{  
+    if(key.code !== "Space"){
+        player.canMove = false;
+        player.velX = 0;
+    }
+});
+
+let allBullets = [];
+window.addEventListener("keyup", (key)=>{
     player.canMove = false;
     player.velX = 0;
+
+    if (key.code === "Space") {
+        allBullets.push(creatBullet());
+        console.log(allBullets);
+    }
 });
 
 
@@ -131,9 +145,34 @@ function drawStat() {
     c.fillText(`Life: ${stat.life}`, canvas.width - 80, 35);
 }
 
+function creatBullet() {
+    this.bullet = {
+        x: player.x + player.width / 2 - player.width / 3 * 2 / 2,
+        y: player.y + 5,
+        width: player.width / 3,
+        height: player.height / 3 * 2,
+        velY: -3,
+        color: "mistyrose",
+    }
+    
+    return this.bullet;
+}
+
+function bulletScript() {
+    for (let bullet of allBullets) {
+        drawPrefab(bullet);
+        bullet.y += bullet.velY;
+    }
+}
+
 function playerScript() {
     
     player.x += player.velX;
+    if(player.x + player.width > canvas.width - borderMap.wallRight.width - 10){
+        player.x = canvas.width - borderMap.wallRight.width - 10 - player.width;
+    }else if(player.x < borderMap.wallLeft.width + 10){
+        player.x = borderMap.wallLeft.width + 10;
+    }
     drawPrefab(player);
 }
 
@@ -142,6 +181,7 @@ function animate() {
     
     drawWall();
     drawStat();
+    bulletScript();     
     playerScript();
 
     requestAnimationFrame(animate);
