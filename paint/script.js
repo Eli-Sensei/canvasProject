@@ -3,6 +3,7 @@ const canvas = document.querySelector("canvas");
 canvas.width = canvas.offsetWidth;
 canvas.height = canvas.offsetHeight;
 
+// window resize
 
 let c = canvas.getContext("2d");
 
