@@ -8,7 +8,7 @@
     <meta property="og:url" content="https://all-canvas-projects.herokuapp.com/">
     <meta property="og:title" content="All canvas projects">
     <meta property="og:description" content="La description de la preview de la page où y'a tous mes canvas ">
-    <meta property="og:image" content="https://cdn.worldvectorlogo.com/logos/canvas.svg">
+    <meta property="og:image" content="https://bibliotheques.csdm.qc.ca/files/2018/11/10_banques_dimages_gratuites_libres_de_droits-300x169.jpg">
 
 
     <title>Canvas Project</title>
