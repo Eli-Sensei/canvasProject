@@ -24,6 +24,7 @@
             width: 100%;
 
             display: flex;
+            flex-direction: row-reverse;
             justify-content: space-evenly;
             flex-wrap: wrap;
 
@@ -43,13 +44,16 @@
             <a href="./PremierTest/index.html">Bouboules</a>
         </li>
         <li>
-            <a href="./StarWarsGame/index.html">Star Wars Game</a>
+            <a href="./StarWarsGame/index.html">Etoiles Guerre Game</a>
         </li>
         <li>
-            <a href="./PongTest/index.html">Pong</a>
+            <a href="./PongTest/index.html">(ping) Pong</a>
         </li>
         <li>
-            <a href="./SpaceShooter/index.html">Space Shooter</a>
+            <a href="./SpaceShooter/index.html">Space Chou fleur</a>
+        </li>
+        <li>
+            <a href="./paint/index.html">Paint mais en mieux</a>
         </li>
     </ul>
 </body>
