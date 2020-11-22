@@ -1,0 +1,42 @@
+body{
+    background-color: gray;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+canvas{
+    border: 1px solid white;
+
+    width: 99%;
+    height: 90vh;
+}
+
+#colorContainer{
+    width: 100%;
+    height: 9vh;
+
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
+#colorContainer img{
+    width: 5vw;
+    height: 5vw;
+
+    margin: 0.5vw;
+}
+.colorBox{
+    width: 5vw;
+    height: 5vw;
+
+    margin: 0.5vw;
+}
+.colorBox:active{
+    filter: brightness(50%);
+}
+#lineWidth{
+    width: 5vw;
+    height: 5vw;
+
+    margin: 0.5vw;
+}
