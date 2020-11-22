@@ -10,11 +10,20 @@ let c = canvas.getContext("2d");
 
 
 let mouse = {
-    x: undefined,
-    y: undefined,
+    pos: {x: undefined, y:undefined},
     isPressed: false
 };
 
+function  getMousePos(canvas, evt) {
+    var rect = canvas.getBoundingClientRect(), // abs. size of element
+    scaleX = canvas.width / rect.width,    // relationship bitmap vs. element for X
+    scaleY = canvas.height / rect.height;  // relationship bitmap vs. element for Y
+    
+    return {
+        x: (evt.clientX - rect.left) * scaleX,   // scale mouse coordinates after they have
+        y: (evt.clientY - rect.top) * scaleY     // been adjusted to be relative to element
+    }
+}
 
 
 
@@ -22,42 +31,44 @@ let mouse = {
 
 // function draw() {
     
-//     // drawLine(mouse, 'red');
-//     // console.log(mouse);
-
-
-//     requestAnimationFrame(draw);
-// }
-// draw();
-
-let paintController = {
-    color: "blue",
-    lineWidth: 1,
-    begin: ()=>{
-        c.beginPath();
-        c.moveTo(mouse.x, mouse.y);
-    },
-    draw: ()=>{
-        c.lineWidth = paintController.lineWidth;
-        c.lineTo(mouse.x, mouse.y);
-    },
-    end: ()=>{
-        c.strokeStyle = paintController.color;
-        c.stroke();
-    },
-    clearAll: ()=>{
-        c.clearRect(0, 0, canvas.width, canvas.height);
+    //     // drawLine(mouse, 'red');
+    //     // console.log(mouse);
+    
+    
+    //     requestAnimationFrame(draw);
+    // }
+    // draw();
+    
+    let lineWidth = document.querySelector("#lineWidth");
+    let lineWidthInfo = document.querySelector("#lineWidthInfo");
+    let paintController = {
+        color: "blue",
+        lineWidth: lineWidth.value,
+        begin: ()=>{
+            c.beginPath();
+            c.moveTo(mouse.pos.x, mouse.pos.y);
+        },
+        draw: ()=>{
+            c.lineWidth = paintController.lineWidth;
+            c.lineTo(mouse.pos.x, mouse.pos.y);
+        },
+        end: ()=>{
+            c.strokeStyle = paintController.color;
+            c.stroke();
+        },
+        clearAll: ()=>{
+            c.clearRect(0, 0, canvas.width, canvas.height);
+        }
     }
-}
-
+    lineWidthInfo.textContent = `${paintController.lineWidth}px`;
+    
 window.addEventListener("mousedown", (e)=>{
     mouse.isPressed = true;
     paintController.begin();
 });
 
 window.addEventListener("mousemove", (e)=>{
-    mouse.x = e.x;
-    mouse.y = e.y;
+    mouse.pos = getMousePos(canvas, e);
     
     if (mouse.isPressed) {
         paintController.draw();
@@ -80,15 +91,9 @@ function initColors() {
             paintController.color = ele.attributes.value.value;
         });
     }
-
-    let lineWidth = document.querySelector("#lineWidth");
-    lineWidth.addEventListener("focusout", ()=>{
-        paintController.lineWidth = parseInt(lineWidth.value);
-        // console.log(lineWidth.value);
-        
-    });
     lineWidth.addEventListener("click", ()=>{
         paintController.lineWidth = parseInt(lineWidth.value);
+        lineWidthInfo.textContent = `${paintController.lineWidth}px`;
         // console.log(lineWidth.value);
         
     });

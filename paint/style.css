@@ -9,6 +9,7 @@ canvas{
 
     width: 99%;
     height: 90vh;
+    cursor: crosshair;
 }
 
 #colorContainer{
@@ -20,23 +21,26 @@ canvas{
     flex-wrap: wrap;
 }
 #colorContainer img{
-    width: 5vw;
-    height: 5vw;
+    width: 5vh;
+    height: 5vh;
 
-    margin: 0.5vw;
+    margin: 0.5vh;
 }
-.colorBox{
-    width: 5vw;
-    height: 5vw;
+#colorContainer > div{
+    width: 5vh;
+    height: 5vh;
+    border: 1px solid black;
 
-    margin: 0.5vw;
+    margin: 0.5vh;
 }
 .colorBox:active{
     filter: brightness(50%);
 }
 #lineWidth{
-    width: 5vw;
-    height: 5vw;
+    width: 15vh;
+    height: 5vh;
     
-    margin: 0.5vw;
+    margin: 0.5vh;
+
+    
 }
