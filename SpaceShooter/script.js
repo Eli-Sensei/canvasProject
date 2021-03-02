@@ -6,16 +6,19 @@ canvas.height = 800;
 let c = canvas.getContext('2d');
 
 //////////////// PREFABS ///////////////
+// stat
 let stat = {
     score: 0,
     life: 3,
     addNumber: (which, num)=>{
+        // increase life or score
         if(which  === 'score') stat.score += num;
         if(which  === 'life') stat.life += num;
-        console.log(`add ${num} to ${which}`);
+        console.log(`added ${num} to ${which}`);
     }
 }
 
+// player
 let player = {
     x: canvas.width / 2 - 10,
     y: canvas.height - 40,
@@ -27,8 +30,10 @@ let player = {
     canMove: false,
 }
 
+// map prefab
+
 let borderMap = {
-    size: 5
+    size: 5 // size of border
 };
 borderMap = {
     wallLeft: {
@@ -84,6 +89,8 @@ borderMap = {
 
 window.addEventListener("keydown", (key)=>{
     console.log(key.code);
+
+    // Player movement
     player.canMove = true;
     if (player.canMove) {
         if (key.code === "ArrowRight") {
@@ -94,12 +101,12 @@ window.addEventListener("keydown", (key)=>{
     }
 });
 
-window.addEventListener("keyup", (key)=>{  
-    if(key.code !== "Space"){
-        player.canMove = false;
-        player.velX = 0;
-    }
-});
+// window.addEventListener("keyup", (key)=>{  
+//     if(key.code !== "Space"){
+//         player.canMove = false;
+//         player.velX = 0;
+//     }
+// });
 
 let allBullets = [];
 window.addEventListener("keyup", (key)=>{
@@ -127,6 +134,7 @@ function drawPrefab(prefab) {
     }
 }
 
+// drawing the map
 function drawWall() {
     drawPrefab(borderMap.wallTop);
     drawPrefab(borderMap.wallRight);
@@ -136,6 +144,7 @@ function drawWall() {
     drawPrefab(borderMap.endWall);
 }
 
+// drawing score and life
 function drawStat() {
     c.font = "20px Verdana"
     c.fillStyle = "orange";
@@ -145,19 +154,22 @@ function drawStat() {
     c.fillText(`Life: ${stat.life}`, canvas.width - 80, 35);
 }
 
+
+// create bullet
 function creatBullet() {
     this.bullet = {
-        x: player.x + player.width / 2 - player.width / 3 * 2 / 2,
+        x: (player.x + player.width / 2) - (player.width / 3) / 2,
         y: player.y + 5,
         width: player.width / 3,
         height: player.height / 3 * 2,
         velY: -3,
-        color: "mistyrose",
+        color: "green",
     }
     
     return this.bullet;
 }
 
+// bullet movement
 function bulletScript() {
     for (let bullet of allBullets) {
         drawPrefab(bullet);
@@ -165,6 +177,7 @@ function bulletScript() {
     }
 }
 
+// player collision
 function playerScript() {
     
     player.x += player.velX;
@@ -176,8 +189,9 @@ function playerScript() {
     drawPrefab(player);
 }
 
+// game engine
 function animate() {
-    c.clearRect(0, 0, canvas.width, canvas.height);
+    c.clearRect(0, 0, canvas.width, canvas.height); // clear all
     
     drawWall();
     drawStat();

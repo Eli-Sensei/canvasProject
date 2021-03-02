@@ -1,15 +1,15 @@
 let canvas = document.querySelector('canvas');
 
-canvas.width = window.innerWidth - 10;
-canvas.height = canvas.width / 3 * 2;
+canvas.width = 1080;
+canvas.height = 720;
 
 let c = canvas.getContext('2d');
 
-window.addEventListener("resize", ()=>{
-    canvas.width = window.innerWidth - 10;
-    canvas.height = canvas.width / 3 * 2;
+// window.addEventListener("resize", ()=>{
+//     canvas.width = window.innerWidth - 10;
+//     canvas.height = canvas.width / 3 * 2;
     
-});
+// });
 
 ///////////// PREFABS /////////////////////////
 let score = {
@@ -42,26 +42,6 @@ let ballCache = {
 }
 
 // console.log(ball);
-
-let leftBar = {
-    x: 20,
-    y: 250,
-    width: 10,
-    height: 100,
-    color: "white"
-};
-
-let rightBar = {
-    x: innerWidth - 40,
-    y: 250,
-    width: 10,
-    height: 100,
-    speed: ball.velY,
-    color: "white"
-};
-if (rightBar.speed < 0) {
-    rightBar.speed = -rightBar.speed;
-}
 
 let borderMap = {
     size: 5
@@ -97,6 +77,25 @@ borderMap = {
     }
 };
 
+let leftBar = {
+    x: 20,
+    y: 250,
+    width: 10,
+    height: 100,
+    color: "white"
+};
+
+let rightBar = {
+    x: canvas.width - 30,
+    y: 250,
+    width: 10,
+    height: 100,
+    speed: ball.velY / 100 * 90,
+    color: "white"
+};
+if (rightBar.speed < 0) {
+    rightBar.speed = -rightBar.speed;
+}
 
 
 const mouse = {
