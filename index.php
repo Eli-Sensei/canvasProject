@@ -48,6 +48,7 @@
 <body>
     <h1>My Mini-Games Projects</h1>
     <ul>
+        <!-- pas automatique -->
         <li>
             <a href="./PremierTest/index.html">Bouboules</a>
         </li>
