@@ -67,6 +67,9 @@
         <li>
             <a href="./myTileMap/index.html">Tile (en cours)</a>
         </li>
+        <li>
+            <a href="./myTileMap/index.html">Tile (en cours)</a>
+        </li>
     </ul>
 </body>
 </html>
