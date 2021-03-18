@@ -14,55 +14,117 @@ let tileH = 40;
 let mapW = canvas.width / tileW;
 let mapH = canvas.height / tileH;
 
-class Tile{
-    constructor(){}
-}
-
-
-let player = {
-    x: 2 * tileW,
-    y: 4 * tileH,
-    w: tileW,
-    h: tileH,
-    isMoving: false,
-    direction: null,
-    color: "blue"
-}
-
-
-let gameMap = [
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-    0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 0,
-    0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0,
-    0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0,
-    0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 0,
-    0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0,
-    0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0,
-    0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0,
-    0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0,
-    0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 0,
-    0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0,
-    0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0,
-    0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 0,
-    0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0,
-    0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0,
-    0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0,
-    0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-];
-
-let tilesType = [
-    {
-        tileName: "wall",
-        collision: true,
-        color: "darkred"
-    },
-    {
-        tileName: "ground",
-        collision: false,
-        color: "burlywood"
+class Tiles{
+    constructor(type, layer, collision, color){
+        this.type = type;
+        this.layer = layer;
+        this.collision = collision;
+        this.color = color;
     }
+}
+
+class InteractObjects extends Tiles{
+    constructor(type, layer, collision, color){
+        super(type, layer, collision, color);
+    }
+
+}
+
+class Entities extends Tiles{
+    constructor(type, layer, collision, color, x, y, w, h){
+        super(type, layer, collision, color);
+        this.x = x;
+        this.y = y;
+        this.w = w;
+        this.h = h;
+        this.isMoving = false;
+        this.direction = null;
+        this.inventory = [];
+    }
+
+    addToInventory(item){
+        var found = false;
+        for(var i = 0; i < this.inventory.length; i++) {
+            if (this.inventory[i].name == 'key') {
+                found = true;
+                this.inventory[i].count += 1;
+                break;
+            }
+        }
+        if (!found) {
+            this.inventory.push({name: item, count: 1});
+            console.log('pas le else');            
+        }
+    }
+
+    getInventory(){
+        return this.inventory;
+    }
+}
+
+
+
+
+let gameMapLayers = [
+    [
+        //gameMap
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+        0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 0,
+        0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0,
+        0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0,
+        0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 0,
+        0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0,
+        0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0,
+        0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0,
+        0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0,
+        0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 0,
+        0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0,
+        0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0,
+        0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0,
+        0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0,
+        0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0,
+        0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0,
+        0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    ],
+    [
+        // interactsObject
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    ]
 ];
+
+let player = new Entities("player", 1, false, "blue", 12 * tileW, 5 * tileH, tileW, tileH);
+
+let layers = [
+    [
+        new Tiles("wall", 0, true, "darkred"),
+        new Tiles("ground", 0, false, "white"),
+        new Tiles("door", 0, true, "orange"),
+    ],
+    [
+        new InteractObjects("invisible", 1, false, "transparent"),
+        new InteractObjects("key", 1, false, "pink")
+    ]
+];
+
+
 
 
 // LISTENER
@@ -101,7 +163,9 @@ function getNewTile(player) {
     let newTargetTile = {
         x: newPos.x,
         y: newPos.y,
-        tile: tilesType[gameMap[(newPos.y*mapW) + newPos.x]]
+        gameMapTile: layers[0][gameMapLayers[0][(newPos.y*mapW) + newPos.x]],
+        InteractObjectsTile: layers[1][gameMapLayers[1][(newPos.y*mapW) + newPos.x]]
+
     }
 
     return newTargetTile;
@@ -111,11 +175,23 @@ function move(player) {
     let newTargetedTile = getNewTile(player);
     
     // if no collision so can move
-    if (player.isMoving && !newTargetedTile.tile.collision) {
-        // console.log(newTargetedTile);
-        c.fillStyle = player.color;
-        player.x = newTargetedTile.x * tileW;
-        player.y = newTargetedTile.y * tileH;
+    if (player.isMoving) {
+        if (newTargetedTile.gameMapTile.type == "ground") {
+            c.fillStyle = player.color;
+            player.x = newTargetedTile.x * tileW;
+            player.y = newTargetedTile.y * tileH;
+        }else{
+            if(newTargetedTile.gameMapTile.type == "wall") console.log("c'est un mur !!!");
+            if(newTargetedTile.gameMapTile.type == "door") console.log("c'est une porte, trouve une clé...");
+            
+        }
+    }
+
+    if (newTargetedTile.InteractObjectsTile.type == "key") {
+        console.log("C'est une clé !!!!!!!");
+        player.addToInventory("key");
+        console.log(player.inventory);
+        
     }
 }
 
@@ -125,17 +201,24 @@ function drawPlayer(player) {
     c.fillRect(player.x, player.y, player.w, player.h);
 }
 
-function drawTile(coordinates, type) {
-    c.fillStyle = type.color;
+let count = 1;
+function drawTile(coordinates, tile) {
+    c.fillStyle = tile.color;
     c.fillRect(coordinates.x, coordinates.y, tileW, tileH);
 }
 
-function drawMap() {
-    for (let y = 0; y < mapH; y++) {
-        for (let x = 0; x < mapW; x++) {
-            drawTile({x: x * tileW, y: y * tileH}, tilesType[gameMap[(y*mapW) + x]]);
+function drawLayers() {
+    for (let i = 0; i < gameMapLayers.length; i++) {
+        for (let y = 0; y < mapH; y++) {
+            for (let x = 0; x < mapW; x++) {
+                drawTile({x: x * tileW, y: y * tileH}, layers[i][gameMapLayers[i][(y*mapW) + x]]);
+            }
         }
     }
+}
+
+function drawMap() {
+    drawLayers();
     drawPlayer(player);
 }
 
@@ -149,5 +232,3 @@ function drawGame() {
 setInterval(() => {
     drawGame();
 }, 10);
-
-console.log(gameMap.length, mapW * mapH);

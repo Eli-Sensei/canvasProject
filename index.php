@@ -65,7 +65,7 @@
             <a href="./paint/index.html">Paint mais en mieux</a>
         </li>
         <li>
-            <a href="./mytileMap/index.html">Tile (en cours)</a>
+            <a href="./myTileMap/index.html">Tile (en cours)</a>
         </li>
     </ul>
 </body>
