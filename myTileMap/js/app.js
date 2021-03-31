@@ -14,8 +14,30 @@ let tileH = 40;
 let mapW = Math.floor(canvas.width / tileW);
 let mapH = Math.floor(canvas.height / tileH);
 
+let images = [];
+function spritesInit() {
+    let image1 = new Image(40, 200);
+    let image2 = new Image(40, 200);
+    let image3 = new Image(40, 200);
+    let image4 = new Image(200, 40);
+    let image5 = new Image(40, 40);
+
+    image1.src = "./js/sprites/pipo-map001_at-kusa.png";
+    image2.src = "./js/sprites/pipo-map001_at-tuti.png";
+    image3.src = "./js/sprites/pipo-map001_at-yama3.png";
+    image4.src = "./js/sprites/KeyIcons.png";
+    image5.src = "./js/sprites/New_Piskel.png";
+
+    images.push(image1);
+    images.push(image2);
+    images.push(image3);
+    images.push(image4);
+    images.push(image5);
+}
+spritesInit();
+
 class Tiles{
-    constructor(type, layer, collision, color, imgX, imgY, isImage){
+    constructor(type, layer, collision, color, imgX, imgY, isImage, indexOfImage = 0){
         this.type = type;
         this.layer = layer;
         this.collision = collision;
@@ -23,12 +45,13 @@ class Tiles{
         this.imgX = imgX;
         this.imgY = imgY;
         this.isImage = isImage;
+        this.indexOfImage = indexOfImage;
     }
 }
 
 class InteractObjects extends Tiles{
-    constructor(name, type, layer, collision, color, imgX, imgY, isImage){
-        super(type, layer, collision, color, imgX, imgY, isImage);
+    constructor(name, type, layer, collision, color, imgX, imgY, isImage, indexOfImage = 0){
+        super(type, layer, collision, color, imgX, imgY, isImage, indexOfImage);
         this.name = name;
 
     }
@@ -141,8 +164,16 @@ class Entities extends Tiles{
         let found = this.getInventoryItem(item.name);
         if (found) {
             found.count += 1;
+            found.innerHTML += 1;
         }else {
-            this.inventory.push({name: item.name, count: 1});   
+            this.inventory.push({tileItem: item, name: item.name, count: 1});
+            let $inventory = document.querySelector(".inventory");
+            let $div = document.createElement("div");
+            $div.classList.add("inventory-item");
+            $div.style.backgroundImage = `url(${images[item.indexOfImage].src})`;
+            $div.style.backgroundPosition = `${item.imgX}px ${item.imgY}`;
+            $div.innerHTML = "1";
+            $inventory.appendChild($div);
         }
     }
 
@@ -178,11 +209,13 @@ class Entities extends Tiles{
 
     showInventory(){
         for (const item of this.inventory) {
-            console.log(item.name, item.count);
+            console.log(item, item.name, item.count);
 
         }
         this.loadInventory();
-        document.getElementsByClassName("canvas2")[0].classList.toggle("show");
+        let $inventory = document.querySelector(".inventory");
+        $inventory.classList.toggle("show");
+        console.log($inventory)
     }
 }
 
@@ -194,41 +227,21 @@ let player = new Entities("player", 1, false, "blue", 13 * tileW, 5 * tileH, til
 
 let layers = [
     [
-        new Tiles("wall", 0, true, "darkred", 0, 160, true),
-        new Tiles("ground", 0, false, "white", 0, 120, true),
+        new Tiles("wall", 0, true, "darkred", 0, 160, true, 0),
+        new Tiles("ground", 0, false, "white", 0, 120, true, 1),
     ],
     [
         new InteractObjects("invisible", "invisible", 1, false, "transparent", 0, 0, false),
-        new InteractObjects("key", "item", 1, false, "pink", 0, 0, true),
-        new InteractObjects("door", "obstacle", 0, true, "orange", 0, 0, true),
+        new InteractObjects("key", "item", 1, false, "pink", 0, 0, true, 3),
+        new InteractObjects("door", "obstacle", 0, true, "orange", 0, 0, true, 4),
     ],
     [
         new InteractObjects("invisible", "invisible", 1, false, "transparent", 0, 0, false),
-        new InteractObjects("rock", "decor", 1, false, "red", 0, 0, true),
+        new InteractObjects("rock", "decor", 1, false, "red", 0, 0, true, 2),
     ]
 ];
 
-let images = [];
-function spritesInit() {
-    let image1 = new Image(40, 200);
-    let image2 = new Image(40, 200);
-    let image3 = new Image(40, 200);
-    let image4 = new Image(200, 40);
-    let image5 = new Image(40, 40);
 
-    image1.src = "./js/sprites/pipo-map001_at-kusa.png";
-    image2.src = "./js/sprites/pipo-map001_at-tuti.png";
-    image3.src = "./js/sprites/pipo-map001_at-yama3.png";
-    image4.src = "./js/sprites/KeyIcons.png";
-    image5.src = "./js/sprites/New_Piskel.png";
-
-    images.push(image1);
-    images.push(image2);
-    images.push(image3);
-    images.push(image4);
-    images.push(image5);
-}
-spritesInit();
 
 // LISTENER
 
@@ -277,36 +290,10 @@ function drawEntity(entity) {
 
 let count = 1;
 function drawTile(coordinates, tile) {
-    
-    let imageIndex = 0;
-    switch (tile.type) {
-        case "wall":
-            imageIndex = 0;
-            break;
-
-        case "ground":
-            imageIndex = 1;
-            break;
-
-        case "decor":
-            imageIndex = 2;
-            break;
-
-        case "item":
-            imageIndex = 3;
-            break;
-
-        case "obstacle":
-            imageIndex = 4;
-            break;
-    
-        default:
-            break;
-    }
-    
+        
     if (tile.isImage) {
         c.drawImage(
-            images[imageIndex], 
+            images[tile.indexOfImage], 
             tile.imgX, tile.imgY, // ou dans l'image
             tileW, tileH, // quel taille bout on prend
             coordinates.x, coordinates.y, // ou dans le canvas

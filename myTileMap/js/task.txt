@@ -1,0 +1,7 @@
+passer tout le code sous typescrypt
+
+réfléchir a une manière d'export import pour avoir un code clean
+
+créer des object pour chaque tile
+
+faire une 2D array (c plus facile)

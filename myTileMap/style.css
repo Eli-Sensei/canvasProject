@@ -14,12 +14,16 @@ body{
     transform: translate(-50%, -50%);
 }
 
-.canvas2{
-    background-color: rgb(44, 44, 44);
-
-    display: none;
-
+.inventory{
+    width: calc(45px * 5);
+    height: calc(45px * 6);
     transform: none;
+    background-color: rgb(44, 44, 44);
+    visibility: hidden;
+
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
 
     position: absolute;
     top: unset;
@@ -27,11 +31,23 @@ body{
     bottom: 20px;
     right: 20px;
 
-    width: 300px;
-    height: 400px;
     z-index: 200;
+}
+.inventory-item{
+    width: 40px;
+    height: 40px;
+
+    background-color: rgba(4, 19, 4, 0.507);
+
+    display: inline-flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+
+    font-weight: bold;
+    color: white;
+    font-size: 1rem
 }
 
 .show{
-    display: block;
+    visibility: visible;
 }

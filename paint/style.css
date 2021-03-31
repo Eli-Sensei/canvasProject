@@ -1,13 +1,15 @@
 body{
-    background-color: gray;
+    background-color: wheat;
     margin: 0;
     box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 canvas{
     border: 1px solid white;
+    box-sizing: border-box;
 
-    width: 99%;
+    width: 100vw;
     height: 90vh;
     cursor: crosshair;
 }
@@ -42,5 +44,12 @@ canvas{
     
     margin: 0.5vh;
 
+    
+}
+
+#lineWidthInfo{
+    display: flex;
+    justify-content: center;
+    align-items: center;
     
 }

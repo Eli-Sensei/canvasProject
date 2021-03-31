@@ -1,3 +1,4 @@
+const $save = document.querySelector(".save");
 const canvas = document.querySelector("canvas");
 
 canvas.width = canvas.offsetWidth;
@@ -6,7 +7,9 @@ canvas.height = canvas.offsetHeight;
 // window resize
 
 let c = canvas.getContext("2d");
-
+c.fillStyle = "wheat";
+c.fillRect(0, 0, canvas.width, canvas.height);
+c.fillStyle = "black";
 
 
 let mouse = {
@@ -25,7 +28,13 @@ function  getMousePos(canvas, evt) {
     }
 }
 
-
+function download() {
+    const canvasURI = canvas.toDataURL("image/png");
+    let a = document.createElement("a");
+    a.href = canvasURI;
+    a.download = "your_paint";
+    a.click();
+}
 
 
 
@@ -57,7 +66,8 @@ function  getMousePos(canvas, evt) {
             c.stroke();
         },
         clearAll: ()=>{
-            c.clearRect(0, 0, canvas.width, canvas.height);
+            c.fillStyle = "wheat"
+            c.fillRect(0, 0, canvas.width, canvas.height);
         }
     }
     lineWidthInfo.textContent = `${paintController.lineWidth}px`;
@@ -80,6 +90,7 @@ window.addEventListener("mousemove", (e)=>{
 window.addEventListener("mouseup", (e)=>{
     mouse.isPressed = false;
 });
+$save.addEventListener("click", download);
 
 
 function initColors() {

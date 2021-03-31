@@ -1,3 +1,10 @@
+//tile size in pixel
+export let tileW = 40;
+export let tileH = 40;
+// map size in tile
+export let mapW = Math.floor(canvas.width / tileW);
+export let mapH = Math.floor(canvas.height / tileH);
+
 export let gameMapLayers = [
     [
         //gameMap
