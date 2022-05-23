@@ -269,8 +269,7 @@ class Boid {
         this.acc.mult(0)
         this.changeColor();
     }
-
-    show(){
+Square
         point(this.pos.x, this.pos.y, this.color, 3);
     }
 
