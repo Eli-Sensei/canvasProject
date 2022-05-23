@@ -46,7 +46,7 @@
     </style>
 </head>
 <body>
-    <h1>My Mini-Games Projects</h1>
+    <h1>My Canvas Projects</h1>
     <ul>
         <!-- pas automatique -->
         <li>
@@ -65,7 +65,16 @@
             <a href="./paint/index.html">Paint mais en mieux</a>
         </li>
         <li>
-            <a href="./myTileMap/index.html">Tile (en cours)</a>
+            <a href="./myTileMap/index.html">Tile (forgot)</a>
+        </li>
+        <li>
+            <a href="./Boids/index.html">Tile (forgot)</a>
+        </li>
+        <li>
+            <a href="./mapGenerationTest/index.html">Tile (forgot)</a>
+        </li>
+        <li>
+            <a href="./Collision/index.html">Tile (forgot)</a>
         </li>
     </ul>
 </body>
