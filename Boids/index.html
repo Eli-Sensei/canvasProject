@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style.css">
+    <title>Boids</title>
+</head>
+<body>
+    <div>    
+        <canvas></canvas>
+    </div>
+    <div class="slidecontainer">
+        <div>
+            <input type="range" min="0" max="50" value="10" class="slider" id="alignment">
+            <label for="">alignment</label>
+        </div>
+        <div>
+            <input type="range" min="0" max="50" value="10" class="slider" id="cohesion">
+            <label for="">cohesion</label>
+        </div>
+        <div>
+            <input type="range" min="0" max="50" value="10" class="slider" id="separation">
+            <label for="">separation</label>
+        </div>
+        <div>
+            <input type="range" min="0" max="100" value="2" class="slider" id="force">
+            <label for="">max force</label>
+        </div>
+        <div>
+            <input type="range" min="0" max="100" value="20" class="slider" id="speed">
+            <label for="">max speed</label>
+        </div>
+        
+    </div>
+
+    <script src="./boid.js"></script> 
+    <script src="./sketch.js"></script>
+</body>
+</html>
