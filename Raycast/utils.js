@@ -27,14 +27,17 @@ function random(min, max) {
 }
 
 
-function drawLine(startVector, endVector) {
-    if (!c)
-        return;
+function drawLine(startVector, endVector, color = 0) {
+    if (!c) return;
+    let colors = ["gray", "black", "red", "darkgray"]
+
+    
+
     c.beginPath();
     c.moveTo(startVector.x, startVector.y);
     c.lineTo(endVector.x, endVector.y);
     c.lineWidth = 5;
-    c.strokeStyle = "blue";
+    c.strokeStyle = colors[color];
     c.stroke();
 }
 

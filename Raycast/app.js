@@ -69,12 +69,12 @@ let player = {
     x: 2,
     y: 5,
     speed: 0.1,
-    angle: 0,
+    angle: Math.PI,
     rotation_speed: 0.2
 }
 
 function drawPlayer(){
-    drawTile(player, 2)
+    drawTile({x: 8, y: 1}, 2)
 
     // la direction
     let xx = Math.cos(player.angle) * 30
@@ -83,12 +83,12 @@ function drawPlayer(){
     // let yy = Math.sin(player.angle * Math.PI / 180) * 30
     let playerTransform = {
         canvasPos: {
-            x: player.x * tileW + tileW / 2,
-            y: player.y * tileH + tileH / 2
+            x: 8 * tileW + tileW / 2,
+            y: 1 * tileH + tileH / 2
         },
         directionCompass: {
-            x: player.x * tileW + tileW / 2 + xx,
-            y: player.y * tileH + tileH / 2 + yy
+            x: 8 * tileW + tileW / 2 + xx,
+            y: 1 * tileH + tileH / 2 + yy
         },
     }
     drawLine(playerTransform.canvasPos, playerTransform.directionCompass)
@@ -103,27 +103,30 @@ function movePlayer(nb){
     let tempX = player.x + (player.speed * cosX) * nb
     let tempY = player.y + (player.speed * sinY) * nb
 
+    let tempTempX = tempX
+    let tempTempY = tempY
+
     if(nb > 0){
         // droite
-        if(cosX >= 0) tempX++
+        if(cosX > 0) tempX++
         // gauche
         // else if(cosX <= 1) tempX--
         // bas
-        if(sinY >= 0) tempY++
+        if(sinY > 0) tempY++
         // haut
         // else if(sinY <= 1) tempY--
     }
     
 
     if(map[Math.floor(player.y)][Math.floor(tempX)] == 0)
-        player.x = Math.floor(tempX)
+        player.x = tempTempX
     if(map[Math.floor(tempY)][Math.floor(player.x)] == 0)
-        player.y = Math.floor(tempY)
+        player.y = tempTempY
 
     
 
     // console.log(Math.round(player.x), player.y)
-    console.log(Math.floor(tempX), Math.floor(tempY))
+    // console.log(Math.floor(tempX), Math.floor(tempY))
     
     // console.log(player.angle)
 }
@@ -137,7 +140,78 @@ function playerController(){
 
 
 
+function drawWalls() {
 
+    // canvas.width = 20
+    for (let pixelX = 0; pixelX <= canvas.width; pixelX++) {
+        let ratio = (pixelX - canvas.width / 2) / (canvas.width / 2);
+        let dirX = Math.cos(player.angle) / 2 + Math.cos(player.angle - Math.PI/2) * ratio
+        let dirY = Math.sin(player.angle) / 2 + Math.sin(player.angle - Math.PI/2) * ratio
+        let mapX = Math.floor(player.x)
+        let mapY = Math.floor(player.y)
+        let deltaDistX = Math.sqrt(1 + (Square(dirY) / Square(dirX)))
+        let deltaDistY = Math.sqrt(1 + (Square(dirX) / Square(dirY)))
+        let stepX = 0;
+        let stepY = 0;
+        let sideDistX = 0;
+        let sideDistY = 0;
+        
+        if(dirX < 0 ){
+            stepX = -1
+            sideDistX = (player.x - mapX) * deltaDistX
+        } else {
+            stepX = 1
+            sideDistX = (mapX + 1 - player.x) * deltaDistX
+        }
+        
+        if (dirY < 0) {
+            stepY = -1
+            sideDistY = (player.y - mapY) * deltaDistY
+        } else {
+            stepY = 1
+            sideDistY = (mapY + 1 - player.y) * deltaDistY
+        }
+
+        let hit = 0; 
+        let side = 0;
+        let perpWallDist = 0;
+
+        while (hit == 0)
+        {
+          if (sideDistY <= 0 || (sideDistX >= 0 && sideDistX < sideDistY))
+          {
+            sideDistX += deltaDistX;
+            mapX += stepX;
+            side = 0;
+          }
+          else
+          {
+            sideDistY += deltaDistY;
+            mapY += stepY;
+            side = 1;
+          }
+          //Check if ray has hit a wall
+          if (map[mapX][mapY] > 0) hit = 1;
+        } 
+
+        if(side == 0) perpWallDist = (sideDistX - deltaDistX);
+        else          perpWallDist = (sideDistY - deltaDistY);
+
+        let wallColor = side == 0 ? 0 : 3
+
+        let wallTransform = {
+            start: {
+                x: pixelX,
+                y: canvas.height - canvas.height / 2 / perpWallDist - 150
+            },
+            end: {
+                x: pixelX,
+                y: canvas.height + canvas.height / 2 / perpWallDist - 150
+            },
+        }
+        drawLine(wallTransform.start, wallTransform.end, wallColor)
+    }
+}
 
 function drawTile(coor, color){
     if (!c) return;
@@ -164,8 +238,11 @@ function update(){
 }
 
 function draw() {
-    drawMap();
+    // drawMap();
     drawPlayer();
+    c.fillStyle = "black"
+    c.fillRect(0, canvas.height/1.3, canvas.width, canvas.height)
+    drawWalls();
     drawPoint(mouse.x, mouse.y, "blue", 10)
 }
 
