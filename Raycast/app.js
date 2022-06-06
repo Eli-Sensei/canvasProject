@@ -70,7 +70,7 @@ let player = {
     y: 5,
     speed: 0.1,
     angle: 0,
-    rotation_speed: 0.07
+    rotation_speed: 0.2
 }
 
 function drawPlayer(){
@@ -79,6 +79,8 @@ function drawPlayer(){
     // la direction
     let xx = Math.cos(player.angle) * 30
     let yy = Math.sin(player.angle) * 30
+    // let xx = Math.cos(player.angle * Math.PI / 180) * 30
+    // let yy = Math.sin(player.angle * Math.PI / 180) * 30
     let playerTransform = {
         canvasPos: {
             x: player.x * tileW + tileW / 2,
@@ -101,13 +103,29 @@ function movePlayer(nb){
     let tempX = player.x + (player.speed * cosX) * nb
     let tempY = player.y + (player.speed * sinY) * nb
 
-    if(map[Math.floor(player.y)][Math.floor(tempX)] == 0)
-        player.x = tempX
-    if(map[Math.floor(tempY)][Math.floor(player.x)] == 0)
-        player.y = tempY
+    if(nb > 0){
+        // droite
+        if(cosX >= 0) tempX++
+        // gauche
+        // else if(cosX <= 1) tempX--
+        // bas
+        if(sinY >= 0) tempY++
+        // haut
+        // else if(sinY <= 1) tempY--
+    }
+    
 
-    console.log(Math.floor(player.x), player.y)
+    if(map[Math.floor(player.y)][Math.floor(tempX)] == 0)
+        player.x = Math.floor(tempX)
+    if(map[Math.floor(tempY)][Math.floor(player.x)] == 0)
+        player.y = Math.floor(tempY)
+
+    
+
+    // console.log(Math.round(player.x), player.y)
     console.log(Math.floor(tempX), Math.floor(tempY))
+    
+    // console.log(player.angle)
 }
 
 function playerController(){
@@ -169,7 +187,7 @@ function animate() {
 
 setInterval(() => {
     animate()
-}, 30);
+}, 100);
 
 
 // for (let pix = 0; pix <= canvas.width; pix++) {
