@@ -36,7 +36,7 @@ function drawLine(startVector, endVector, color = 0) {
     c.beginPath();
     c.moveTo(startVector.x, startVector.y);
     c.lineTo(endVector.x, endVector.y);
-    c.lineWidth = 5;
+    c.lineWidth = 1;
     c.strokeStyle = colors[color];
     c.stroke();
 }
@@ -48,4 +48,22 @@ function drawPoint(x, y, color, weight) {
     c.stroke();
     c.fillStyle = color;
     c.fill();
+}
+
+function drawSquare(x, y, size, color) {
+    
+    c.fillStyle = color;
+    c.fillRect(x, y, size, size);
+}
+
+function getLineAngle(u, v) {
+
+    let rU = Math.sqrt(u.x*u.x + u.y*u.y);
+    let rV = Math.sqrt(v.x*v.x + v.y*v.y);
+    
+    let rUV = u.x*v.x + u.y*v.y;
+
+    let cosUV = rUV / (rU*rV)
+
+    return cosUV;
 }
