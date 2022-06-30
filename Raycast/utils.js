@@ -1,5 +1,5 @@
 let Square = (nb) => nb * nb;
-
+let colors = ["gray", "black", "red", "blue", "green"]
 function exeFuncByName(functionName, context /*, args */) {
     var args = Array.prototype.slice.call(arguments, 2);
     var namespaces = functionName.split(".");
@@ -29,9 +29,6 @@ function random(min, max) {
 
 function drawLine(startVector, endVector, color = 0) {
     if (!c) return;
-    let colors = ["gray", "black", "red", "darkgray"]
-
-    
 
     c.beginPath();
     c.moveTo(startVector.x, startVector.y);
@@ -46,14 +43,14 @@ function drawPoint(x, y, color, weight) {
     c.arc(x, y, weight, 0, Math.PI * 2);
     c.lineWidth = 0;
     c.stroke();
-    c.fillStyle = color;
+    c.fillStyle = colors[color];
     c.fill();
 }
 
-function drawSquare(x, y, size, color) {
+function drawRect(x, y, w, h, color) {
     
-    c.fillStyle = color;
-    c.fillRect(x, y, size, size);
+    c.fillStyle = colors[color];
+    c.fillRect(x, y, w, h);
 }
 
 function getLineAngle(u, v) {
@@ -66,4 +63,30 @@ function getLineAngle(u, v) {
     let cosUV = rUV / (rU*rV)
 
     return cosUV;
+}
+
+function isSquareIntoSquare(sq1, sq2) {
+    
+    if (sq1.x < sq2.x + sq2.w &&
+        sq1.x + sq1.w > sq2.x &&
+        sq1.y < sq2.y + sq2.h &&
+        sq1.y + sq1.h > sq2.y) {
+         // collision detected!
+         
+         return true;
+     }
+
+    return false;
+}
+
+function isPointIntoSquare(point, sq) {
+
+    if(point.x >= sq.x && 
+        point.x <= sq.x + sq.w &&
+        point.y >= sq.y &&
+        point.y <= sq.y + sq.h
+    ){
+        return true;
+    }
+    return false;
 }

@@ -67,14 +67,7 @@ function setListeners() {
 }
 setListeners();
 
-function point(x, y, color, weight) {
-    c.beginPath();
-    c.arc(x, y, weight, 0, Math.PI * 2);
-    c.lineWidth = 0;
-    c.stroke();
-    c.fillStyle = color;
-    c.fill();
-}
+
 
 function line(startVector, endVector) {
     if (!c)
